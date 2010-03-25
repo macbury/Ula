@@ -1,0 +1,18 @@
+<h1>Listing links</h1>
+
+<section>
+	<% @links.each do |link| %>
+	<article>
+		<header>
+			<h2><%= link_to link.title, link.url %></h2>
+			<p>dodano <time datetime="<%= link.created_at.to_s(:rfc822) %>"><%= link.created_at %></time></p> 
+		</header>
+		<%= image_tag "http://api.thumbalizr.com/?url=#{link.url}&width=100" %>
+		<%= simple_format(link.description).html_safe %>
+		<p>
+			<small><%= link_to 'Destroy', link, :confirm => 'Are you sure?', :method => :delete %> | <%= link_to "Sources #{link.sources_count}", link %></small>
+		</p>
+	</article>
+	<% end %>
+</section>
+

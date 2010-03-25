@@ -1,0 +1,5 @@
+development:
+  sleep_time: 1
+  
+production:
+  sleep_time: 25

@@ -1,0 +1,20 @@
+<p>
+  <b>Title:</b>
+  <%= @link.title %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @link.url %>
+</p>
+
+<ul>
+	<% @link.sources.each do |source| %>
+		<li>
+			<b><%= source.name %></b> - <%= source.content %>
+		</li>
+	<% end %>
+</ul>
+
+<%= link_to 'Edit', edit_link_path(@link) %> |
+<%= link_to 'Back', links_path %>

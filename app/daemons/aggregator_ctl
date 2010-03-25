@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'daemons'
+require 'yaml'
+
+ENV["RAILS_ENV"] ||= "production"
+require File.dirname(__FILE__) + "/../../config/environment"
+
+options = YAML.load(File.open(File.dirname(__FILE__) + "/../../config/daemons.yml"))
+options = Hash[*options.to_a.collect { |key, value| [key.to_sym, value]}.flatten]
+options[:dir_mode] = options[:dir_mode].to_sym unless options[:dir_mode].nil?
+
+Daemons.run File.dirname(__FILE__) + '/aggregator.rb', options
