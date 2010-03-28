@@ -10,7 +10,7 @@
 		<%= image_tag "http://api.thumbalizr.com/?url=#{link.url}&width=100" %>
 		<%= simple_format(link.description).html_safe %>
 		<p>
-			<small><%= link_to 'Destroy', link, :confirm => 'Are you sure?', :method => :delete %> | <%= link_to "Sources #{link.sources_count}", link %></small>
+			<small><%= link_to 'Destroy', link, :confirm => 'Are you sure?', :method => :delete %> | <%= link_to "Sources #{link.sources_count}", link %> | Transport: <%= link.sources.map(&:transport).join(', ') %></small>
 		</p>
 	</article>
 	<% end %>

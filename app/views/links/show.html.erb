@@ -11,7 +11,7 @@
 <ul>
 	<% @link.sources.each do |source| %>
 		<li>
-			<b><%= source.name %></b> - <%= source.content %>
+			<b><%= source.name %>[<%= source.transport.to_s %>]</b> - <%= source.content %>
 		</li>
 	<% end %>
 </ul>

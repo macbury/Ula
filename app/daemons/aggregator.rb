@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 require "yaml"
-require "lib/aggregators/aggregator"
+require "app/aggregators/aggregator"
 
 # You might want to change this
 ENV["RAILS_ENV"] ||= "development"
@@ -16,7 +17,7 @@ Signal.trap("TERM") do
   $running = false
 end
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 config = load_config
 aggregator = Aggregator.new
 

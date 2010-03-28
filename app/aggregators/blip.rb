@@ -26,13 +26,17 @@ class Blip
 		
 		out.each do |status|
 			
-			links << {
+			link = {
 				:type => :blip,
 				:id => status['id'].to_i,
 				:user => status['user']['login'],
+				:avatar => "",
 				:body => status['body'].gsub(/http:\/\/blip\.pl\/s\/([0-9]+)|http:\/\/www\.blip\.pl\/s\/([0-9]+)|http:\/\/blip\.pl\/tags\//i, ''),
 				:created_at => status['created_at']
 			}
+			
+			link[:avatar] = status['user']['avatar']['url_50'] unless status['user']['avatar'].nil?
+			links << link
 			
 			self.last_id = self.last_id.nil? ? status['id'].to_i : [status['id'].to_i, self.last_id].max
 		end

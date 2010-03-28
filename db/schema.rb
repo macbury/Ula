@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100325211637) do
+ActiveRecord::Schema.define(:version => 20100326193732) do
 
   create_table "links", :force => true do |t|
     t.string   "title"
@@ -23,12 +23,13 @@ ActiveRecord::Schema.define(:version => 20100325211637) do
   create_table "sources", :force => true do |t|
     t.string   "name"
     t.string   "url"
-    t.string   "type"
     t.string   "avatar"
     t.integer  "link_id"
     t.string   "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "transport"
+    t.integer  "transport_id", :limit => 8
   end
 
 end
