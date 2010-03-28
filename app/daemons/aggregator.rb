@@ -17,7 +17,7 @@ Signal.trap("TERM") do
   $running = false
 end
 
-#ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger = nil
 config = load_config
 aggregator = Aggregator.new
 

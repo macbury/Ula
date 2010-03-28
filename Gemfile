@@ -9,7 +9,7 @@ gem "rails", "3.0.0.beta"
 
 gem "pg"
 gem "httparty"
-gem "nokogiri"
+gem "nokogiri", :require => nil
 gem "daemons", :require => nil
 
 ## Bundle the gems you use:

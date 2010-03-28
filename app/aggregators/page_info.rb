@@ -1,6 +1,7 @@
 require "net/http"
 require "nokogiri"
 require "open-uri"
+require "iconv"
 
 class PageInfo
 	
@@ -11,7 +12,7 @@ class PageInfo
 		if url
 			self.main_url = url
 		else
-			return false
+			return nil
 		end
 		
 		begin
@@ -20,9 +21,16 @@ class PageInfo
 			meta_desc = doc.css("meta[name='description']").first 
 			self.description = meta_desc['content'] unless (meta_desc.nil? || meta_desc['content'].nil?)
 		rescue Exception => e
-			return false
+			return nil
 		end
 		
+	end
+	
+	def title=(new_title)
+		new_title.strip!
+		["\n", "\t"].each { |remove| new_title.gsub!(remove, "") }
+		
+		write_attribute :title, new_title
 	end
 	
 	def get_url(raw_url, redirected_times=10)
@@ -39,11 +47,15 @@ class PageInfo
 		case resp
 			when Net::HTTPSuccess
 				unless url.query.nil?
-					query = url.query.split("&").reject { |e| e.match(/(utm_|feature)/i) }.join('&')
+					query = url.query.split("&").reject { |e| e.match(/(utm_|feature|#\w+)/i) }.join('&')
 					url.query = query.empty? ? nil : query
 				end
-				puts "+#{redirected_times}: #{url.to_s}"
-				return url.to_s
+				
+				new_url = "http://" +url.host+url.path
+				new_url += "?#{url.query}" unless ( url.query.nil? || url.query.empty? )
+				
+				puts "+#{redirected_times}: #{new_url}"
+				return new_url
 			when Net::HTTPRedirection
 				begin
 					redirect_url = URI.parse(resp.header['location'])

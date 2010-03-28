@@ -4,3 +4,6 @@ blip.pl
 www.jobmaster.rk.edu.pl
 jobmaster.rk.edu.pl
 kciuk.pl
+www.kciuk.pl
+scigani.pl
+megaprzypaly.pl
