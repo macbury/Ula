@@ -3,6 +3,7 @@ require "app/aggregators/twitter"
 require "app/aggregators/flaker"
 require "app/aggregators/spinacz"
 require "app/aggregators/pinger"
+require "app/aggregators/friendfeed"
 require "app/aggregators/page_info"
 require "uri"
 require "net/http"
@@ -20,6 +21,7 @@ class Aggregator
 		@flaker = Flaker.new
 		@spinacz = Spinacz.new
 		@pinger = Pinger.new
+		@friendFeed = FriendFeed.new
 		
 		@black_list = []
 		File.open("config/ignore_sites.txt", "r").each { |line| @black_list << line.strip }
@@ -55,6 +57,8 @@ class Aggregator
 	def aggregate
 		links = []
 		
+		puts "FriendFeed..."
+		links += @friendFeed.fetchNext
 		puts "Pinger..."
 		links += @pinger.fetchNext
 		puts "Spinacz..."
@@ -72,7 +76,7 @@ class Aggregator
 
 			if raw_link[:body] =~ LINK_REGEXP || raw_link[:link]
 				puts "[#{Time.current}] Wykryto link: #{raw_link[:type].to_s}"
-				next if raw_link[:type] == :twitter && language?(raw_link[:body]) != "pl"
+				next if (raw_link[:type] == :twitter || raw_link[:type] == :friendfeed) && language?(raw_link[:body]) != "pl"
 				
 				pageInfo = PageInfo.new(raw_link[:link] || $1.to_s.strip)
 				if (pageInfo.nil? || banned?(pageInfo.main_url))
@@ -89,13 +93,12 @@ class Aggregator
 				
 				next unless link.valid?
 				
-				source = Source.find_or_initialize_by_name_and_link_id(raw_link[:user], link.id, raw_link[:type].to_s)
+				source = Source.find_or_initialize_by_name_and_link_id(raw_link[:user].downcase, link.id, raw_link[:type].to_s)
 				
 				if source.new_record?
 					puts "Dodano nowe zrodlo: #{raw_link[:user]}"
 					source.content = raw_link[:body].gsub('\u003C', '"').gsub('\u003E', '"').gsub(/<\/?[^>]*>/, "")
 					source.transport_id = raw_link[:id]
-					source.transport = raw_link[:type].to_s
 					source.avatar = raw_link[:avatar]
 					source.save
 				end

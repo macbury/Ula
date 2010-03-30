@@ -29,6 +29,7 @@ class PageInfo
 	def title=(new_title)
 		new_title.strip!
 		["\n", "\t"].each { |remove| new_title.gsub!(remove, "") }
+		new_title = Iconv.iconv("latin1","UTF-8", new_title).join
 		
 		write_attribute :title, new_title
 	end
